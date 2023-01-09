@@ -9,10 +9,9 @@
 
 #include <string>
 
-#include <librsync-config.h>
 #include <librsync.h>
 
-inline std::string get(const v8::Local<v8::Value> &value);
+inline std::string get(v8::Isolate* isolate, const v8::Local<v8::Value> &value);
 
 extern "C" {
   rs_result signature(char const *in, char const *out);

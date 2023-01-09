@@ -5,8 +5,8 @@ using namespace v8;
 // Signature
 class GenerateSignatureWorker : public Nan::AsyncWorker {
     public:
-        GenerateSignatureWorker(Nan::Callback *callback, v8::Local<v8::Value> in, v8::Local<v8::Value> out)
-            : Nan::AsyncWorker(callback), in(get(in)), out(get(out))
+        GenerateSignatureWorker(Nan::Callback *callback, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate* isolate)
+            : Nan::AsyncWorker(callback), in(get(isolate, in)), out(get(isolate, out))
         {}
 
         ~GenerateSignatureWorker() {}
@@ -44,8 +44,8 @@ class GenerateSignatureWorker : public Nan::AsyncWorker {
 
 class GenerateDeltaWorker : public Nan::AsyncWorker {
     public:
-        GenerateDeltaWorker(Nan::Callback *callback, v8::Local<v8::Value> sig_name,v8::Local<v8::Value> in, v8::Local<v8::Value> out)
-            : Nan::AsyncWorker(callback), sig_name(get(sig_name)), in(get(in)), out(get(out))
+        GenerateDeltaWorker(Nan::Callback *callback, v8::Local<v8::Value> sig_name,v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate* isolate)
+            : Nan::AsyncWorker(callback), sig_name(get(isolate, sig_name)), in(get(isolate, in)), out(get(isolate, out))
         {}
 
         ~GenerateDeltaWorker() {}
@@ -84,8 +84,8 @@ class GenerateDeltaWorker : public Nan::AsyncWorker {
 
 class PatchWorker : public Nan::AsyncWorker {
     public:
-        PatchWorker(Nan::Callback *callback, v8::Local<v8::Value> basis_name, v8::Local<v8::Value> in, v8::Local<v8::Value> out)
-            : Nan::AsyncWorker(callback), basis_name(get(basis_name)), in(get(in)), out(get(out))
+        PatchWorker(Nan::Callback *callback, v8::Local<v8::Value> basis_name, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate* isolate)
+            : Nan::AsyncWorker(callback), basis_name(get(isolate, basis_name)), in(get(isolate, in)), out(get(isolate, out))
         {}
 
         ~PatchWorker() {}
@@ -123,33 +123,36 @@ class PatchWorker : public Nan::AsyncWorker {
 };
 
 NAN_METHOD (GenerateSignatureSync) {
-    int ret = signature(get(info[0]).c_str(), get(info[1]).c_str());
+    v8::Isolate* isolate = info.GetIsolate();
+    int ret = signature(get(isolate, info[0]).c_str(), get(isolate, info[1]).c_str());
     info.GetReturnValue().Set(ret);
 }
 
 NAN_METHOD(GenerateSignatureAsync) {
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
-    Nan::AsyncQueueWorker(new GenerateSignatureWorker(callback, info[0], info[1]));
+    Nan::AsyncQueueWorker(new GenerateSignatureWorker(callback, info[0], info[1], info.GetIsolate()));
 }
 
 NAN_METHOD (GenerateDeltaSync) {
-    int ret = delta(get(info[0]).c_str(), get(info[1]).c_str(), get(info[2]).c_str());
+    v8::Isolate* isolate = info.GetIsolate();
+    int ret = delta(get(isolate, info[0]).c_str(), get(isolate, info[1]).c_str(), get(isolate, info[2]).c_str());
     info.GetReturnValue().Set(ret);
 }
 
 NAN_METHOD(GenerateDeltaAsync) {
     Nan::Callback *callback = new Nan::Callback(info[3].As<Function>());
-    Nan::AsyncQueueWorker(new GenerateDeltaWorker(callback, info[0], info[1], info[2]));
+    Nan::AsyncQueueWorker(new GenerateDeltaWorker(callback, info[0], info[1], info[2], info.GetIsolate()));
 }
 
 NAN_METHOD (PatchSync) {
-    int ret = patch(get(info[0]).c_str(), get(info[1]).c_str(), get(info[2]).c_str());
+    v8::Isolate* isolate = info.GetIsolate();
+    int ret = patch(get(isolate, info[0]).c_str(), get(isolate, info[1]).c_str(), get(isolate, info[2]).c_str());
     info.GetReturnValue().Set(ret);
 }
 
 NAN_METHOD(PatchAsync) {
     Nan::Callback *callback = new Nan::Callback(info[3].As<Function>());
-    Nan::AsyncQueueWorker(new PatchWorker(callback, info[0], info[1], info[2]));
+    Nan::AsyncQueueWorker(new PatchWorker(callback, info[0], info[1], info[2], info.GetIsolate()));
 }
 
 NAN_MODULE_INIT(InitAll) {
@@ -284,6 +287,8 @@ rs_result patch(const char* basis_name, const char *in, const char *out) {
     return result;
 }
 
-inline std::string get(const v8::Local<v8::Value> &value) {
-    return std::string(*v8::String::Utf8Value(value));
+inline std::string get(v8::Isolate* isolate, const v8::Local<v8::Value> &value) {
+
+    return std::string(*v8::String::Utf8Value(isolate, value));
+    
 }
