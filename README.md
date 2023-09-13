@@ -1,14 +1,17 @@
-## rdiff simple binding in node.js
+## Librsync binding for NodeJS.
 
-http://linux.die.net/man/1/rdiff
+Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node-rdiff).
 
-## pre
+## What's new
 
-install librsync `~0.9.7` or `>=1.0.0`.
+-   dependencies (`librsync` and `zlib`) are precompiled and bundled;
+-   added support for Windows (x64);
+-   updated `callback->Call()` calls (removed deprecation warnings);
+-   upgraded dependencies.
 
-## example
+## Example
 
-the sync api
+The sync api:
 
 ```js
 // a new file contains "hello"
@@ -19,28 +22,21 @@ var b = "b.txt";
 
 // `a` wants to be `b`
 
-rdiff.signatureSync (a, a + ".sig");
-rdiff.deltaSync (a + ".sig", b, a + ".delta");
+rdiff.signatureSync(a, a + ".sig");
+rdiff.deltaSync(a + ".sig", b, a + ".delta");
 
 // the `a.patched` contains "hello world"
-rdiff.patchSync (a, a + ".delta", a + ".patched");
+rdiff.patchSync(a, a + ".delta", a + ".patched");
 ```
 
-do the same with async api
+The same using the async api:
 
 ```js
-rdiff.signature(a, a + ".sig", function (err){
-  rdiff.delta(a + ".sig", b, a + ".delta", function(err){
-    rdiff.patch (a, a + ".delta", a + ".patched", function(err) {
-      // yeah! contents of `a` should equal contents of `a.patched`
+rdiff.signature(a, a + ".sig", function (err) {
+    rdiff.delta(a + ".sig", b, a + ".delta", function (err) {
+        rdiff.patch(a, a + ".delta", a + ".patched", function (err) {
+            // yeah! contents of `a` should equal contents of `a.patched`
+        });
     });
-  })
 });
 ```
-
-## warning
-
-it doesn't do file existence checking yet.
-
-## license
-MIT
