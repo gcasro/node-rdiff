@@ -7,6 +7,11 @@
 #include <node.h>
 #include <nan.h>
 #include <string>
+
+#ifdef _WIN32
+// #define rsync_EXPORTS
+#define LIBRSYNC_STATIC_DEFINE
+#endif
 #include <librsync.h>
 
 inline std::string get(v8::Isolate *isolate, const v8::Local<v8::Value> &value);
