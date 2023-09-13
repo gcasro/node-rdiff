@@ -17,19 +17,16 @@
                     "conditions": [
                         ["target_arch=='x64'", {
                             "include_dirs": [
-                                "lib-rsync-linux-x64/include/",
+                                "<(module_root_dir)/lib-rsync-linux-x64/include/",
                             ],
                             "link_settings": {
                                 "libraries": [
-                                    "-lrsync"
+                                    "<(module_root_dir)/lib-rsync-linux-x64/bin/librsync.so"
                                 ],
-                                "library_dirs": [
-                                    "lib-rsync-linux-x64/bin/"
-                                ]
                             },
                             "copies=": [
                                 {"destination": "build/Release/", "files": [
-                                    "lib-rsync-linux-x64/bin/librsync.so",
+                                    "<(module_root_dir)/lib-rsync-linux-x64/bin/librsync.so",
                                 ]}
                             ],
                         }]
@@ -39,15 +36,12 @@
                     "conditions": [
                         ["target_arch=='x64'", {
                             "include_dirs": [
-                                "lib-rsync-windows-x64/include/",
+                                "<(module_root_dir)/lib-rsync-windows-x64/include/",
                             ],
                             "link_settings": {
                                 "libraries": [
-                                    "rsync.lib",
+                                    "<(module_root_dir)/lib-rsync-windows-x64/lib/rsync.lib",
                                 ],
-                                "library_dirs": [
-                                    "lib-rsync-windows-x64/lib/"
-                                ]
                             },
                             "copies=": [
                                 {"destination": "build/Release/", "files": [
