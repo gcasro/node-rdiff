@@ -1,6 +1,6 @@
 {
     "name": "@gcas/rsync",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Nodejs native librsync binding (sync & async).",
     "homepage": "https://github.com/gcasro/rsync",
     "repository": {

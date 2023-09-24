@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 1.0.1
+
+-   Minor update in docs.
+
 ## 1.0.0
 
 -   dependencies are now precompiled and bundled;

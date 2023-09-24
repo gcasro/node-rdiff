@@ -1,4 +1,4 @@
-## Native librsync binding for NodeJS.
+# Native librsync binding for NodeJS.
 
 Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node-rdiff).
 
@@ -10,9 +10,7 @@ Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node
 
 ## Example
 
-### The synchronous api:
-
-The synchronous API is composed of the functions with `*Sync` suffix:
+The synchronous api (`*Sync` functions):
 
 ```js
 var a = "a.txt"; // Contains "hello".
@@ -26,7 +24,7 @@ rdiff.deltaSync(`${a}.sig`, b, `${a}.delta`);
 rdiff.patchSync(a, `${a}.delta`, `${a}.patched`);
 ```
 
-### The callback async api:
+The callback async api:
 
 ```js
 rdiff.signature(a, `${a}.sig`, function (err) {
@@ -42,7 +40,7 @@ rdiff.signature(a, `${a}.sig`, function (err) {
 });
 ```
 
-### The promise async api (recommended):
+The promise async api (`*Async` functions, recommended):
 
 ```js
 await rdiff.signatureAsync(a, `${a}.sig`);
