@@ -45,7 +45,7 @@
                             },
                             "copies=": [
                                 {"destination": "build/Release/", "files": [
-                                    "lib-rsync-windows-x64/bin/rsync.dll",
+                                    "<(module_root_dir)/lib-rsync-windows-x64/bin/rsync.dll",
                                 ]}
                             ],
                         }]

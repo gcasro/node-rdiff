@@ -2,32 +2,7 @@
     "name": "@gcas/node-rdiff",
     "version": "1.0.0",
     "description": "Nodejs simple librsync binding.",
-    "main": "index.js",
-    "scripts": {
-        "test": "mocha --require should --reporter spec test/test.js",
-        "configure": "node-gyp configure",
-        "build": "node-gyp rebuild"
-    },
-    "keywords": [
-        "rdiff",
-        "librsync"
-    ],
-    "gypfile": true,
-    "author": "Valeriu Paloș <vp@gcas.ro>",
-    "contributors": [
-        "Dhi Aurrahman <diorahman@rockybars.com>"
-    ],
-    "license": "MIT",
-    "dependencies": {
-        "nan": "^2.18.0"
-    },
-    "devDependencies": {
-        "mocha": "^10.2.0",
-        "should": "^13.2.3"
-    },
-    "directories": {
-        "test": "test"
-    },
+    "homepage": "https://github.com/gcasro/node-rdiff",
     "repository": {
         "type": "git",
         "url": "git://github.com/gcasro/node-rdiff.git"
@@ -35,8 +10,36 @@
     "bugs": {
         "url": "https://github.com/gcasro/node-rdiff/issues"
     },
-    "homepage": "https://github.com/gcasro/node-rdiff",
+    "author": "Valeriu Paloș <vp@gcas.ro>",
+    "contributors": [
+        "Dhi Aurrahman <diorahman@rockybars.com>"
+    ],
+    "license": "MIT",
+    "keywords": [
+        "rdiff",
+        "librsync"
+    ],
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "mocha --require should --reporter spec test/test.js",
+        "configure": "node-gyp configure",
+        "build": "node-gyp rebuild"
+    },
+    "gypfile": true,
     "ldflags": [
         "-Wl,-z,defs"
-    ]
+    ],
+    "dependencies": {
+        "nan": "^2.18.0"
+    },
+    "devDependencies": {
+        "mocha": "^10.2.0",
+        "should": "^13.2.3"
+    },
+    "engines": {
+        "node": "^16"
+    }
 }

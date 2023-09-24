@@ -43,7 +43,7 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-}
+};
 
 class DeltaWorker : public Nan::AsyncWorker
 {
@@ -87,7 +87,7 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-}
+};
 
 class PatchWorker : public Nan::AsyncWorker
 {
@@ -131,7 +131,7 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-}
+};
 
 NAN_METHOD(GenerateSignatureSync)
 {

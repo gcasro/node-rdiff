@@ -4,9 +4,9 @@ Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node
 
 ## What's new
 
--   dependencies (`librsync` and `zlib`) are precompiled and bundled;
+-   dependencies are precompiled and bundled;
 -   added support for Windows (x64);
--   updated `callback->Call()` calls (removed deprecation warnings);
+-   updated code to remove warnings;
 -   upgraded dependencies.
 
 ## Example
