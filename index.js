@@ -1,13 +1,6 @@
-const {
-    signature,
-    signatureSync,
-    delta,
-    deltaSync,
-    patch,
-    patchSync,
-} = require("./build/Release/rdiff");
+const { signature, delta, patch, signatureSync, deltaSync, patchSync } = require("./build/Release/rdiff");
 
-async function signaturePromise(sourceFile, signatureFile) {
+async function signatureAsync(sourceFile, signatureFile) {
     return new Promise((resolve, reject) => {
         signature(sourceFile, signatureFile, (error) => {
             if (error) {
@@ -18,7 +11,7 @@ async function signaturePromise(sourceFile, signatureFile) {
     });
 }
 
-async function deltaPromise(signatureFile, targetFile, deltaFile) {
+async function deltaAsync(signatureFile, targetFile, deltaFile) {
     return new Promise((resolve, reject) => {
         delta(signatureFile, targetFile, deltaFile, (error) => {
             if (error) {
@@ -29,7 +22,7 @@ async function deltaPromise(signatureFile, targetFile, deltaFile) {
     });
 }
 
-async function patchPromise(sourceFile, deltaFile, outputFile) {
+async function patchAsync(sourceFile, deltaFile, outputFile) {
     return new Promise((resolve, reject) => {
         patch(sourceFile, deltaFile, outputFile, (error) => {
             if (error) {
@@ -42,12 +35,14 @@ async function patchPromise(sourceFile, deltaFile, outputFile) {
 
 module.exports = {
     signature,
-    signaturePromise,
-    signatureSync,
     delta,
-    deltaPromise,
-    deltaSync,
     patch,
-    patchPromise,
+
+    signatureSync,
+    deltaSync,
     patchSync,
+
+    signatureAsync,
+    deltaAsync,
+    patchAsync,
 };

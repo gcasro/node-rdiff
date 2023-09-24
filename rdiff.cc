@@ -205,41 +205,14 @@ enum
     OPT_BZIP2
 };
 
-FILE *rs_file_open(const char *filename, const char *mode)
-{
-    FILE *f;
-
-    if (!filename || strcmp("-", filename) == 0)
-    {
-        int is_write = mode[0] == 'w';
-        return is_write ? stdout : stdin;
-    }
-
-    if (!(f = fopen(filename, mode)))
-    {
-        exit(RS_IO_ERROR);
-    }
-
-    return f;
-}
-
-int rs_file_close(FILE *f)
-{
-    if ((f == stdin) || (f == stdout))
-    {
-        return 0;
-    }
-    return fclose(f);
-}
-
 rs_result signature(const char *in, const char *out)
 {
     FILE *basis_file, *sig_file;
     rs_stats_t stats;
     rs_result result;
 
-    basis_file = rs_file_open(in, "rb");
-    sig_file = rs_file_open(out, "wb");
+    basis_file = rs_file_open(in, "rb", false);
+    sig_file = rs_file_open(out, "wb", true);
 
     result = rs_sig_file(basis_file,
                          sig_file,
@@ -261,9 +234,9 @@ rs_result delta(const char *sig_name, const char *in, const char *out)
     rs_signature_t *sumset;
     rs_stats_t stats;
 
-    sig_file = rs_file_open(sig_name, "rb");
-    new_file = rs_file_open(in, "rb");
-    delta_file = rs_file_open(out, "wb");
+    sig_file = rs_file_open(sig_name, "rb", false);
+    new_file = rs_file_open(in, "rb", false);
+    delta_file = rs_file_open(out, "wb", true);
 
     result = rs_loadsig_file(sig_file, &sumset, &stats);
     if (result != RS_DONE)
@@ -294,9 +267,9 @@ rs_result patch(const char *basis_name, const char *in, const char *out)
     rs_stats_t stats;
     rs_result result;
 
-    basis_file = rs_file_open(basis_name, "rb");
-    delta_file = rs_file_open(in, "rb");
-    new_file = rs_file_open(out, "wb");
+    basis_file = rs_file_open(basis_name, "rb", false);
+    delta_file = rs_file_open(in, "rb", false);
+    new_file = rs_file_open(out, "wb", true);
 
     result = rs_patch_file(basis_file, delta_file, new_file, &stats);
 
