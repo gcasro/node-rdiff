@@ -1,4 +1,4 @@
-var rdiff = require("../");
+var rdiff = require("../").default;
 var fs = require("fs");
 
 var a = __dirname + "/a.txt";

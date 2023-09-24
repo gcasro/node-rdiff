@@ -6,7 +6,8 @@ Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node
 
 -   dependencies are precompiled and bundled;
 -   added support for Windows (x64);
--   updated code to remove warnings;
+-   added Promise-based functions;
+-   removed compilation warnings;
 -   upgraded dependencies.
 
 ## Example

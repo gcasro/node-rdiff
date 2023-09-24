@@ -195,11 +195,6 @@ NAN_MODULE_INIT(InitAll)
 
 NODE_MODULE(rdiff, InitAll)
 
-static size_t block_len = RS_DEFAULT_BLOCK_LEN;
-#ifdef RS_DEFAULT_STRONG_LEN
-static size_t strong_len = RS_DEFAULT_STRONG_LEN;
-#endif
-
 // cleaned up for a while
 // static int bzip2_level = 0;
 // static int gzip_level  = 0;
@@ -213,12 +208,10 @@ enum
 FILE *rs_file_open(const char *filename, const char *mode)
 {
     FILE *f;
-    int is_write;
 
-    is_write = mode[0] == 'w';
-
-    if (!filename || !strcmp("-", filename))
+    if (!filename || strcmp("-", filename) == 0)
     {
+        int is_write = mode[0] == 'w';
         return is_write ? stdout : stdin;
     }
 
@@ -233,7 +226,9 @@ FILE *rs_file_open(const char *filename, const char *mode)
 int rs_file_close(FILE *f)
 {
     if ((f == stdin) || (f == stdout))
+    {
         return 0;
+    }
     return fclose(f);
 }
 
@@ -246,11 +241,12 @@ rs_result signature(const char *in, const char *out)
     basis_file = rs_file_open(in, "rb");
     sig_file = rs_file_open(out, "wb");
 
-#ifdef RS_DEFAULT_STRONG_LEN
-    result = rs_sig_file(basis_file, sig_file, block_len, strong_len, &stats);
-#else
-    result = rs_sig_file(basis_file, sig_file, block_len, (size_t)8, RS_MD4_SIG_MAGIC, &stats);
-#endif
+    result = rs_sig_file(basis_file,
+                         sig_file,
+                         0, // Use recommended block length.
+                         0, // Use maximum strongsum length.
+                         RS_RK_BLAKE2_SIG_MAGIC,
+                         &stats);
 
     rs_file_close(sig_file);
     rs_file_close(basis_file);
