@@ -1,22 +1,21 @@
-#include "rdiff.h"
+#include "./rdiff.h"
 
 using namespace v8;
 
-// Signature
-class GenerateSignatureWorker : public Nan::AsyncWorker
+class SignatureWorker : public Nan::AsyncWorker
 {
 public:
-    GenerateSignatureWorker(Nan::Callback *callback, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate *isolate)
+    SignatureWorker(Nan::Callback *callback, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate *isolate)
         : Nan::AsyncWorker(callback), in(get(isolate, in)), out(get(isolate, out))
     {
     }
 
-    ~GenerateSignatureWorker() {}
+    ~SignatureWorker() {}
 
     void Execute()
     {
         ret = signature(in.c_str(), out.c_str());
-        if (ret != 0)
+        if (ret != RS_DONE)
         {
             errmsg = (char *)"Error generating signature";
         }
@@ -44,17 +43,17 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-};
+}
 
-class GenerateDeltaWorker : public Nan::AsyncWorker
+class DeltaWorker : public Nan::AsyncWorker
 {
 public:
-    GenerateDeltaWorker(Nan::Callback *callback, v8::Local<v8::Value> sig_name, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate *isolate)
+    DeltaWorker(Nan::Callback *callback, v8::Local<v8::Value> sig_name, v8::Local<v8::Value> in, v8::Local<v8::Value> out, v8::Isolate *isolate)
         : Nan::AsyncWorker(callback), sig_name(get(isolate, sig_name)), in(get(isolate, in)), out(get(isolate, out))
     {
     }
 
-    ~GenerateDeltaWorker() {}
+    ~DeltaWorker() {}
 
     void Execute()
     {
@@ -88,7 +87,7 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-};
+}
 
 class PatchWorker : public Nan::AsyncWorker
 {
@@ -132,7 +131,7 @@ private:
     std::string in;
     std::string out;
     char *errmsg;
-};
+}
 
 NAN_METHOD(GenerateSignatureSync)
 {
@@ -144,7 +143,7 @@ NAN_METHOD(GenerateSignatureSync)
 NAN_METHOD(GenerateSignatureAsync)
 {
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
-    Nan::AsyncQueueWorker(new GenerateSignatureWorker(callback, info[0], info[1], info.GetIsolate()));
+    Nan::AsyncQueueWorker(new SignatureWorker(callback, info[0], info[1], info.GetIsolate()));
 }
 
 NAN_METHOD(GenerateDeltaSync)
@@ -157,7 +156,7 @@ NAN_METHOD(GenerateDeltaSync)
 NAN_METHOD(GenerateDeltaAsync)
 {
     Nan::Callback *callback = new Nan::Callback(info[3].As<Function>());
-    Nan::AsyncQueueWorker(new GenerateDeltaWorker(callback, info[0], info[1], info[2], info.GetIsolate()));
+    Nan::AsyncQueueWorker(new DeltaWorker(callback, info[0], info[1], info[2], info.GetIsolate()));
 }
 
 NAN_METHOD(PatchSync)
@@ -220,14 +219,7 @@ FILE *rs_file_open(const char *filename, const char *mode)
 
     if (!filename || !strcmp("-", filename))
     {
-        if (is_write)
-        {
-            return stdout;
-        }
-        else
-        {
-            return stdin;
-        }
+        return is_write ? stdout : stdin;
     }
 
     if (!(f = fopen(filename, mode)))
@@ -263,11 +255,7 @@ rs_result signature(const char *in, const char *out)
     rs_file_close(sig_file);
     rs_file_close(basis_file);
 
-    if (result != RS_DONE)
-    {
-        return result;
-    }
-    return result;
+    return result; // RS_DONE
 }
 
 rs_result delta(const char *sig_name, const char *in, const char *out)
@@ -283,15 +271,19 @@ rs_result delta(const char *sig_name, const char *in, const char *out)
 
     result = rs_loadsig_file(sig_file, &sumset, &stats);
     if (result != RS_DONE)
+    {
         return result;
+    }
 
-    if ((result = rs_build_hash_table(sumset)) != RS_DONE)
+    result = rs_build_hash_table(sumset);
+    if (result != RS_DONE)
+    {
         return result;
+    }
 
     result = rs_delta_file(sumset, new_file, delta_file, &stats);
 
     rs_free_sumset(sumset);
-
     rs_file_close(delta_file);
     rs_file_close(new_file);
     rs_file_close(sig_file);
@@ -321,6 +313,5 @@ rs_result patch(const char *basis_name, const char *in, const char *out)
 
 inline std::string get(v8::Isolate *isolate, const v8::Local<v8::Value> &value)
 {
-
     return std::string(*v8::String::Utf8Value(isolate, value));
 }
