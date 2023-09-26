@@ -1,6 +1,6 @@
 # Native librsync binding for NodeJS.
 
-Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node-rdiff).
+Initially based on the [`node-rdiff` package](https://www.npmjs.com/package/node-rdiff) but diverged significantly (see CHANGELOG.md).
 
 ## Platforms supported
 
