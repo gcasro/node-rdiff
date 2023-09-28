@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.0.2
+
+-   Renamed to `@gcas/rdiff`.
+-   Doc updates.
+
 ## 1.0.1
 
 -   Minor update in docs.

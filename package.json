@@ -1,14 +1,14 @@
 {
-    "name": "@gcas/rsync",
-    "version": "1.0.1",
-    "description": "Nodejs native librsync binding (sync & async).",
-    "homepage": "https://github.com/gcasro/rsync",
+    "name": "@gcas/rdiff",
+    "version": "1.0.2",
+    "description": "NodeJS native librsync binding (sync & async).",
+    "homepage": "https://github.com/gcasro/rdiff",
     "repository": {
         "type": "git",
-        "url": "git://github.com/gcasro/rsync.git"
+        "url": "git://github.com/gcasro/rdiff.git"
     },
     "bugs": {
-        "url": "https://github.com/gcasro/rsync/issues"
+        "url": "https://github.com/gcasro/rdiff/issues"
     },
     "author": "Valeriu Paloș <vp@gcas.ro>",
     "contributors": [
