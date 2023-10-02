@@ -1,6 +1,6 @@
 {
     "name": "@gcas/rdiff",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "NodeJS native librsync binding (sync & async).",
     "homepage": "https://github.com/gcasro/rdiff",
     "repository": {
@@ -37,11 +37,12 @@
     },
     "devDependencies": {
         "mocha": "^10.2.0",
+        "node-gyp": "^9.4.0",
         "prettier": "^3.0.3",
         "should": "^13.2.3"
     },
     "engines": {
-        "node": "^16"
+        "node": ">=16.0.0"
     },
     "prettier": {
         "singleQuote": false,

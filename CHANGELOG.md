@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 1.0.3
+
+-   Fix requried NodeJS version to allow >=16.0.0.
+
 ## 1.0.2
 
 -   Renamed to `@gcas/rdiff`.
